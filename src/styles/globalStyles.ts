@@ -13,6 +13,7 @@ const GlobalStyles = createGlobalStyle`
         padding: 0;
         background: #171A21;
         color: #FFFFFF;
+        overflow-y: scroll;
     }
     *,
     *::before,
@@ -43,6 +44,9 @@ const GlobalStyles = createGlobalStyle`
         font-family: inherit;
         cursor: pointer;
         padding: 0;
+        color: inherit;
+        font-size: inherit;
+        background-color: transparent;
     }
     input {
         border: none;

@@ -1,58 +1,66 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import sprite from "assets/icons.svg";
+import { OptionsBtn } from "./OptionsBtn/OptionsBtn";
+import { PriceBtn } from "./PriceBtn/PriceBtn";
+import { HeaderSearch } from "./HeaderSearch/HeaderSearch";
 import logo from "assets/logo.png";
-import {
-  ArrowDownIcon,
-  HeaderContainer,
-  Logo,
-  Nav,
-  NavList,
-  OptionsBtn,
-  OptionsIcon,
-  PriceBtn,
-  SearchContainer,
-  SearchIcon,
-  SearchInput,
-  StyledHeader,
-  StyledLink,
-} from "./Header.styled";
+import * as S from "./Header.styled";
+import { PRICE, SortKey } from "../../types/types";
 
 const Header = () => {
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isPriceMenuOpen, setIsPriceMenuOpen] = useState(false);
+  const [sortKey, setSortKey] = useState<SortKey>(PRICE);
+  const [sortToLower, setSortToLower] = useState(true);
+
+  const onClickOptions = (): void => {
+    setIsOptionsOpen((state) => !state);
+  };
+
+  const onClickPrice = (): void => {
+    setIsPriceMenuOpen((state) => !state);
+  };
+
+  const onClickSetSortKey = (sortKey: SortKey) => {
+    setSortKey(sortKey);
+  };
+
+  const onClickSetSortToLower = (boolean: boolean) => {
+    setSortToLower(boolean);
+  };
+
   return (
-    <StyledHeader>
-      <HeaderContainer>
+    <S.StyledHeader>
+      <S.HeaderContainer>
         <Link to="/">
-          <Logo src={logo} alt="logo" />
+          <S.Logo src={logo} alt="logo" />
         </Link>
-        <SearchContainer>
-          <SearchInput type="text" placeholder="Enter an app name..." />
-          <SearchIcon>
-            <use href={`${sprite}#icon-search`} />
-          </SearchIcon>
-        </SearchContainer>
-        <OptionsBtn>
-          <OptionsIcon>
-            <use href={`${sprite}#icon-options`} />
-          </OptionsIcon>
-        </OptionsBtn>
-        <PriceBtn>
-          Price
-          <ArrowDownIcon>
-            <use href={`${sprite}#icon-arrow-down`} />
-          </ArrowDownIcon>
-        </PriceBtn>
-        <Nav>
-          <NavList>
+
+        <HeaderSearch />
+        <OptionsBtn
+          isOptionsOpen={isOptionsOpen}
+          onClickSetSortToLower={onClickSetSortToLower}
+          onClickOptions={onClickOptions}
+        />
+        <PriceBtn
+          isPriceMenuOpen={isPriceMenuOpen}
+          sortKey={sortKey}
+          onClickSetSortKey={onClickSetSortKey}
+          onClickPrice={onClickPrice}
+        />
+
+        <S.Nav>
+          <S.NavList>
             <li>
-              <StyledLink to="/">Search</StyledLink>
+              <S.StyledLink to="/">Search</S.StyledLink>
             </li>
             <li>
-              <StyledLink to="/favorites">Like list</StyledLink>
+              <S.StyledLink to="/favorites">Like list</S.StyledLink>
             </li>
-          </NavList>
-        </Nav>
-      </HeaderContainer>
-    </StyledHeader>
+          </S.NavList>
+        </S.Nav>
+      </S.HeaderContainer>
+    </S.StyledHeader>
   );
 };
 

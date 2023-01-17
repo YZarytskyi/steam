@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+export const HomeSection = styled.section`
+  padding: 24px 27px;
+`;
+
 export const HomeContainer = styled.div`
   margin: 0 auto;
   max-width: 1171px;
-  padding: 24px 27px 14px;
+  padding: 0 26px;
 `;
 
 export const GamesList = styled.ul`
   display: flex;
   gap: 21px;
+  margin-bottom: 30px;
 `;
 
 export const GameItem = styled.li`
@@ -19,7 +24,11 @@ export const GameItem = styled.li`
   border-radius: 10px;
 `;
 
+export const GameLink = styled(Link)`
+`;
+
 export const GameImage = styled.img`
+  width: 100%;
   height: 99px;
   margin-bottom: 6px;
   object-fit: cover;
@@ -48,10 +57,45 @@ export const GamePrice = styled.p`
   line-height: calc(17 / 14);
 `;
 
-export const HeartIcon = styled.svg`
+interface IconsProps {
+  isSelected: boolean;
+}
+
+export const HeartIcon = styled.svg<IconsProps>`
   position: absolute;
   right: 12.6px;
   bottom: 7.3px;
-  width: 23.4px;
-  height: 20.7px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  stroke-width: 3px;
+  stroke: ${({isSelected}) => isSelected ? '#DD1717' : '#FFFFFF'};
+  fill: ${({isSelected}) => isSelected ? '#DD1717' : 'transparent'};
+  transition: stroke 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
+    fill 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
+`;
+
+export const PlayIconContainer = styled.div<IconsProps>`
+  position: absolute;
+  top: 76px;
+  right: 17px;
+  width: 47px;
+  height: 43px;
+  visibility: ${({isSelected}) => isSelected ? 'visible' : 'hidden'};
+  opacity: ${({isSelected}) => isSelected ? 1 : 0};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  cursor: pointer;
+  background-color: ${({theme}) => theme.colors.primary};
+  transition: visibility 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
+    opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
+`;
+
+export const PlayIcon = styled.svg`
+  width: 43px;
+  height: 43px;
+  cursor: pointer;
 `;
