@@ -163,13 +163,20 @@ export const PublishDateBtn = styled.button`
   align-items: center;
 `;
 
-export const ArrowDownIcon = styled.svg`
+interface ArrowDownIconProps {
+  isPriceMenuOpen: boolean;
+}
+
+export const ArrowDownIcon = styled.svg<ArrowDownIconProps>`
   position: absolute;
   top: 3px;
   right: 11px;
   width: 28px;
   height: 30px;
   fill: ${({ theme }) => theme.colors.icons.secondary};
+  transform: ${({ isPriceMenuOpen }) => isPriceMenuOpen ? 'rotate(-180deg)' : "rotate(0)"};
+  transform-origin: center;
+  transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 `;
 
 export const Nav = styled.nav`

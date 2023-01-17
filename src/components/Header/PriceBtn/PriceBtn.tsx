@@ -1,37 +1,41 @@
+import { useState, useEffect } from "react";
 import sprite from "assets/icons.svg";
-import { useClickOutside } from "../../../hooks/useOutsideClick";
-import { PRICE, PUBLISH_DATE, SortKey } from "../../../types/types";
+import { useClickOutside } from "hooks/useOutsideClick";
+import { PRICE, PUBLISH_DATE, SortKey } from "types/types";
 import * as S from "../Header.styled";
+import { setSortedGames, setSortKey } from "redux/slises/gamesSlice";
+import { useAppDispatch, useAppSelector } from "hooks/redux-hooks";
 
-interface PriceBtnProps {
-  isPriceMenuOpen: boolean;
-  sortKey: SortKey;
-  onClickSetSortKey: (sortKey: SortKey) => void;
-  onClickPrice: () => void;
-}
 
-export const PriceBtn = ({
-  isPriceMenuOpen,
-  sortKey,
-  onClickSetSortKey,
-  onClickPrice,
-}: PriceBtnProps): JSX.Element => {
+export const PriceBtn = (): JSX.Element => {
+  const sortKey = useAppSelector(state => state.games.sortKey)
+  const dispatch = useAppDispatch();
+  const [isPriceMenuOpen, setIsPriceMenuOpen] = useState(false);
+
   const priceMenuRef = useClickOutside<HTMLDivElement>(
     onClickPrice,
     isPriceMenuOpen
   );
 
+  function onClickPrice(): void {
+    setIsPriceMenuOpen((state) => !state);
+  };
+
   const onClickSetSort: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     const target = e.currentTarget as HTMLElement;
-    onClickSetSortKey(target.dataset.value as SortKey);
+    dispatch(setSortKey(target.dataset.value as SortKey));
     onClickPrice();
   };
+
+  useEffect(() => {
+    dispatch(setSortedGames());
+  }, [sortKey]);
 
   return (
     <S.PriceContainer ref={priceMenuRef}>
       <S.PriceBtn onClick={onClickPrice}>
         {sortKey}
-        <S.ArrowDownIcon>
+        <S.ArrowDownIcon isPriceMenuOpen={isPriceMenuOpen}>
           <use href={`${sprite}#icon-arrow-down`} />
         </S.ArrowDownIcon>
       </S.PriceBtn>

@@ -1,10 +1,14 @@
+import { PRICE, SortKey } from "types/types";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getGamesByKeyword } from "api/gamesApi";
 import { Game } from "types/types";
+import moment from "moment";
 
 const initialState: InitialState = {
   games: [],
   favoriteGames: [],
+  sortKey: PRICE,
+  sortFromLower: false,
   isLoading: false,
   error: null,
 };
@@ -12,15 +16,22 @@ const initialState: InitialState = {
 interface InitialState {
   games: Array<Game>;
   favoriteGames: Array<Game>;
+  sortKey: SortKey;
+  sortFromLower: boolean;
   isLoading: boolean;
   error: null | string;
 }
 
-export const fetchGamesByKeyword = createAsyncThunk<Game[], string>(
+interface FetchGamesProps {
+  keyword: string;
+  signal: AbortSignal;
+}
+
+export const fetchGamesByKeyword = createAsyncThunk<Game[], FetchGamesProps>(
   "games/fetch",
-  async (keyword, { rejectWithValue }) => {
+  async ({keyword, signal}, { rejectWithValue }) => {
     try {
-      return await getGamesByKeyword(keyword);
+      return await getGamesByKeyword(keyword, signal);
     } catch (err: any) {
       console.log(err);
       return rejectWithValue(err.response.data);
@@ -43,6 +54,29 @@ export const gamesSlice = createSlice({
         (game) => game.appId !== action.payload
       );
     },
+    setSortKey: (state, action) => {
+      state.sortKey = action.payload;
+    },
+    setSortFromLower: (state, action) => {
+      state.sortFromLower = action.payload;
+    },
+    setSortedGames: (state) => {
+      if (state.sortKey === PRICE) {
+        state.games = state.games.sort((a, b) => {
+          const price1 = parseInt(a.price)
+          const price2 = parseInt(b.price)
+          const result = state.sortFromLower ? price1 - price2 : price2 - price1
+          return result
+        })
+        return
+      }
+      state.games = state.games.sort((a, b) => {
+        const date1 = moment(a.released).valueOf()
+        const date2 = moment(b.released).valueOf()
+        const result = state.sortFromLower ? date2 - date1 : date1 - date2
+        return result
+      })
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -60,7 +94,13 @@ export const gamesSlice = createSlice({
   },
 });
 
-export const { clearGameList, addGameToFavorites, removeGameFromFavorites } =
-  gamesSlice.actions;
+export const {
+  clearGameList,
+  addGameToFavorites,
+  removeGameFromFavorites,
+  setSortKey,
+  setSortFromLower,
+  setSortedGames,
+} = gamesSlice.actions;
 
 export default gamesSlice.reducer;

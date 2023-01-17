@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppDispatch } from "hooks/redux-hooks";
-import { clearGameList, fetchGamesByKeyword } from "redux/slises/gamesSlice";
+import { clearGameList, fetchGamesByKeyword, setSortedGames } from "redux/slises/gamesSlice";
 import useDebounce from "hooks/useDebounce";
 import sprite from "assets/icons.svg";
 import * as S from "../Header.styled";
@@ -18,7 +18,7 @@ const HeaderSearch = () => {
     return "";
   });
 
-  const debouncedValue = useDebounce<string>(query.toLowerCase(), 250);
+  const debouncedValue = useDebounce<string>(query?.toLowerCase(), 230);
 
   const onChangeInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setQuery(e.target.value);
@@ -26,17 +26,30 @@ const HeaderSearch = () => {
 
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal
+    if (debouncedValue) {
+      const fetchParams = {keyword: debouncedValue, signal}
+      dispatch(fetchGamesByKeyword(fetchParams));
+      return
+    }
+    return () => {
+      if (!debouncedValue) {
+        controller.abort();
+      }
+    };
+  }, [debouncedValue]);
+
+  useEffect(() => {
+    dispatch(setSortedGames());
     if (query) {
       setSearchParams({ query });
-    }
-    if (query && debouncedValue) {
-      dispatch(fetchGamesByKeyword(debouncedValue));
-      return;
+      return
     }
     searchParams.delete("query");
     setSearchParams(searchParams);
     dispatch(clearGameList());
-  }, [query, debouncedValue]);
+  }, [query]);
 
 
   return(

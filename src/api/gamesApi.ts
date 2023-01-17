@@ -8,8 +8,8 @@ const gamesApi = axios.create({
   },
 });
 
-export const getGamesByKeyword = async (keyword: string) => {
-  const response = await gamesApi.get(`/search/${keyword}/page/1`);
+export const getGamesByKeyword = async (keyword: string, signal: AbortSignal) => {
+  const response = await gamesApi.get(`/search/${keyword}/page/1`, {signal});
   return response.data;
 };
 

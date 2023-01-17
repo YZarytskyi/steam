@@ -2,7 +2,7 @@ export const PRICE = 'Price'
 export const PUBLISH_DATE = 'Publish Date'
 
 export interface Game {
-      appId: number,
+      appId: string,
       title: string,
       url: string,
       imgUrl: string,
