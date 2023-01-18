@@ -5,10 +5,9 @@ export const Spinner = () => {
     <div
       style={{
         margin: '0 auto',
+        marginTop: '50px',
         width: '100%',
-        height: '100vh',
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'center',
       }}
     >

@@ -1,37 +1,51 @@
-import { PRICE, SortKey } from "types/types";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getGamesByKeyword } from "api/gamesApi";
-import { Game } from "types/types";
-import moment from "moment";
+import { GameDetails, PRICE, SortKey } from 'types/types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getGamesByKeyword, getGameDetails } from 'api/gamesApi';
+import { Game } from 'types/types';
+import { gamesSort } from 'utils/gamesSort';
+import { Notify } from 'notiflix';
 
 const initialState: InitialState = {
   games: [],
   favoriteGames: [],
+  filteredFavorites: [],
   sortKey: PRICE,
   sortFromLower: false,
+  gameDetails: null,
   isLoading: false,
+  abortSignal: false,
   error: null,
 };
 
 interface InitialState {
   games: Array<Game>;
   favoriteGames: Array<Game>;
+  filteredFavorites: Array<Game>;
   sortKey: SortKey;
   sortFromLower: boolean;
+  gameDetails: null | GameDetails;
   isLoading: boolean;
+  abortSignal: boolean;
   error: null | string;
 }
 
-interface FetchGamesProps {
-  keyword: string;
-  signal: AbortSignal;
-}
-
-export const fetchGamesByKeyword = createAsyncThunk<Game[], FetchGamesProps>(
-  "games/fetch",
-  async ({keyword, signal}, { rejectWithValue }) => {
+export const fetchGamesByKeyword = createAsyncThunk<Game[], string>(
+  'games/fetch',
+  (keyword, { rejectWithValue }) => {
     try {
-      return await getGamesByKeyword(keyword, signal);
+      return getGamesByKeyword(keyword);
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchGameDetails = createAsyncThunk<GameDetails, number>(
+  'gameDetail/fetch',
+  (id, { rejectWithValue }) => {
+    try {
+      return getGameDetails(id);
     } catch (err: any) {
       console.log(err);
       return rejectWithValue(err.response.data);
@@ -40,10 +54,10 @@ export const fetchGamesByKeyword = createAsyncThunk<Game[], FetchGamesProps>(
 );
 
 export const gamesSlice = createSlice({
-  name: "games",
+  name: 'games',
   initialState,
   reducers: {
-    clearGameList: (state) => {
+    clearGameList: state => {
       state.games = [];
     },
     addGameToFavorites: (state, action) => {
@@ -51,8 +65,17 @@ export const gamesSlice = createSlice({
     },
     removeGameFromFavorites: (state, action) => {
       state.favoriteGames = state.favoriteGames.filter(
-        (game) => game.appId !== action.payload
+        game => game.appId !== action.payload
       );
+    },
+    filterFavorites: (state, action) => {
+      if (action.payload) {
+        state.filteredFavorites = state.favoriteGames.filter(game =>
+          game.title.toLowerCase().includes(action.payload)
+        );
+        return;
+      }
+      state.filteredFavorites = state.favoriteGames;
     },
     setSortKey: (state, action) => {
       state.sortKey = action.payload;
@@ -60,34 +83,56 @@ export const gamesSlice = createSlice({
     setSortFromLower: (state, action) => {
       state.sortFromLower = action.payload;
     },
-    setSortedGames: (state) => {
-      if (state.sortKey === PRICE) {
-        state.games = state.games.sort((a, b) => {
-          const price1 = parseInt(a.price)
-          const price2 = parseInt(b.price)
-          const result = state.sortFromLower ? price1 - price2 : price2 - price1
-          return result
-        })
-        return
+    setSortedGames: (state, action) => {
+      const location: string = action.payload;
+      if (location.includes('favorites')) {
+        state.favoriteGames = gamesSort(
+          state.favoriteGames,
+          state.sortKey,
+          state.sortFromLower
+        );
+        return;
       }
-      state.games = state.games.sort((a, b) => {
-        const date1 = moment(a.released).valueOf()
-        const date2 = moment(b.released).valueOf()
-        const result = state.sortFromLower ? date2 - date1 : date1 - date2
-        return result
-      })
-    }
+      state.games = gamesSort(state.games, state.sortKey, state.sortFromLower);
+    },
+    removeGameDetails: state => {
+      state.gameDetails = null;
+    },
+    setAbortSignal: state => {
+      state.abortSignal = true;
+    },
+    removeAbortSignal: state => {
+      state.abortSignal = false;
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchGamesByKeyword.pending, (state) => {
+      .addCase(fetchGamesByKeyword.pending, state => {
         state.isLoading = true;
       })
       .addCase(fetchGamesByKeyword.fulfilled, (state, action) => {
-        state.games = action.payload;
         state.isLoading = false;
+        if (state.abortSignal) {
+          return;
+        }
+        if (!action.payload.length) {
+          Notify.failure('Games not found')
+        }
+        state.games = action.payload;
       })
       .addCase(fetchGamesByKeyword.rejected, (state, action: any) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      });
+    builder
+      .addCase(fetchGameDetails.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(fetchGameDetails.fulfilled, (state, action) => {
+        state.gameDetails = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchGameDetails.rejected, (state, action: any) => {
         state.error = action.payload;
         state.isLoading = false;
       });
@@ -98,9 +143,13 @@ export const {
   clearGameList,
   addGameToFavorites,
   removeGameFromFavorites,
+  filterFavorites,
   setSortKey,
   setSortFromLower,
   setSortedGames,
+  removeGameDetails,
+  setAbortSignal,
+  removeAbortSignal,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

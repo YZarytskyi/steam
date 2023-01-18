@@ -1,31 +1,17 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-
-export const HomeSection = styled.section`
-  padding: 24px 27px;
-`;
-
-export const HomeContainer = styled.div`
-  margin: 0 auto;
-  max-width: 1171px;
-  padding: 0 26px;
-`;
-
-export const GamesList = styled.ul`
-  display: flex;
-  gap: 21px;
-  margin-bottom: 30px;
-`;
+import { Link } from "react-router-dom";
 
 export const GameItem = styled.li`
   position: relative;
   width: calc((100% - 54px) / 4);
   background-color: ${({ theme }) => theme.colors.secondary};
   border-radius: 10px;
+  @media screen and (max-width: 1170px) {
+    width: 100%;
+  }
 `;
 
-export const GameLink = styled(Link)`
-`;
+export const GameLink = styled(Link)``;
 
 export const GameImage = styled.img`
   width: 100%;
@@ -36,6 +22,7 @@ export const GameImage = styled.img`
 `;
 
 export const GameTitle = styled.h2`
+  min-height: 47px;
   margin-left: 11px;
   margin-bottom: 6px;
   font-weight: 400;
@@ -69,8 +56,8 @@ export const HeartIcon = styled.svg<IconsProps>`
   height: 25px;
   cursor: pointer;
   stroke-width: 3px;
-  stroke: ${({isSelected}) => isSelected ? '#DD1717' : '#FFFFFF'};
-  fill: ${({isSelected}) => isSelected ? '#DD1717' : 'transparent'};
+  stroke: ${({ isSelected }) => (isSelected ? "#DD1717" : "#FFFFFF")};
+  fill: ${({ isSelected }) => (isSelected ? "#DD1717" : "transparent")};
   transition: stroke 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
     fill 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
 `;
@@ -81,15 +68,15 @@ export const PlayIconContainer = styled.div<IconsProps>`
   right: 17px;
   width: 47px;
   height: 43px;
-  visibility: ${({isSelected}) => isSelected ? 'visible' : 'hidden'};
-  opacity: ${({isSelected}) => isSelected ? 1 : 0};
+  visibility: ${({ isSelected }) => (isSelected ? "visible" : "hidden")};
+  opacity: ${({ isSelected }) => (isSelected ? 1 : 0)};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   cursor: pointer;
-  background-color: ${({theme}) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.primary};
   transition: visibility 200ms cubic-bezier(0.39, 0.575, 0.565, 1),
     opacity 200ms cubic-bezier(0.39, 0.575, 0.565, 1);
 `;

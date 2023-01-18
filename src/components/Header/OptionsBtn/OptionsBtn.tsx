@@ -4,17 +4,19 @@ import { useAppDispatch, useAppSelector } from "hooks/redux-hooks";
 import {
   setSortedGames,
   setSortFromLower,
-} from "../../../redux/slises/gamesSlice";
+} from "redux/slises/gamesSlice";
 import sprite from "assets/icons.svg";
-import * as S from "../Header.styled";
+import * as S from "./OptionsBtn.styled";
+import { useLocation } from "react-router-dom";
 
 export const OptionsBtn = (): JSX.Element => {
+  const location = useLocation();
   const sortFromLower = useAppSelector((state) => state.games.sortFromLower);
   const dispatch = useAppDispatch();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(setSortedGames());
+    dispatch(setSortedGames(location.pathname));
   }, [sortFromLower]);
 
   const optionsRef = useClickOutside<HTMLDivElement>(
@@ -45,14 +47,14 @@ export const OptionsBtn = (): JSX.Element => {
       </S.OptionsBtn>
       <S.OptionsSubmenu isOpen={isOptionsOpen}>
         <li>
-          <button data-fromlower='true' onClick={onClickSetSort}>
+          <S.ToBiggerBtn data-fromlower='true' onClick={onClickSetSort} isActive={sortFromLower}>
             Lower to bigger
-          </button>
+          </S.ToBiggerBtn>
         </li>
         <li>
-          <button data-fromlower='false' onClick={onClickSetSort}>
+          <S.ToLowerBtn data-fromlower='false' onClick={onClickSetSort} isActive={!sortFromLower}>
             Bigger to lower
-          </button>
+          </S.ToLowerBtn>
         </li>
       </S.OptionsSubmenu>
     </S.OptionsContainer>

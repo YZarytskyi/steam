@@ -1,33 +1,37 @@
 import { Link } from "react-router-dom";
 import { OptionsBtn } from "./OptionsBtn/OptionsBtn";
-import { PriceBtn } from "./PriceBtn/PriceBtn";
+import { SortKeys } from "./SortKeys/SortKeys";
 import { HeaderSearch } from "./HeaderSearch/HeaderSearch";
+import { Nav } from "./Nav/Nav";
 import logo from "assets/logo.png";
 import * as S from "./Header.styled";
 
 const Header = () => {
   return (
     <S.StyledHeader>
-      <S.HeaderContainer>
+      <S.HeaderPCContainer>
         <Link to="/">
           <S.Logo src={logo} alt="logo" />
         </Link>
-
         <HeaderSearch />
         <OptionsBtn />
-        <PriceBtn />
+        <SortKeys />
+        <Nav />
+      </S.HeaderPCContainer>
 
-        <S.Nav>
-          <S.NavList>
-            <li>
-              <S.StyledLink to="/">Search</S.StyledLink>
-            </li>
-            <li>
-              <S.StyledLink to="/favorites">Like list</S.StyledLink>
-            </li>
-          </S.NavList>
-        </S.Nav>
-      </S.HeaderContainer>
+      <S.HeaderMobileContainer>
+        <S.LogoNavContainer>
+          <Link to="/">
+            <S.Logo src={logo} alt="logo" />
+          </Link>
+          <Nav />
+        </S.LogoNavContainer>
+        <HeaderSearch />
+        <S.PriceOptionsContainer>
+          <SortKeys />
+          <OptionsBtn />
+        </S.PriceOptionsContainer>
+      </S.HeaderMobileContainer>
     </S.StyledHeader>
   );
 };

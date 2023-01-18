@@ -40,3 +40,10 @@ export const StyledPaginateContainer = styled.div`
     background-color: #5b5e63;
   }
 `;
+
+export const ArrowIcons = styled.svg`
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+`

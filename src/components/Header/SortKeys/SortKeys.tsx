@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
-import sprite from "assets/icons.svg";
-import { useClickOutside } from "hooks/useOutsideClick";
-import { PRICE, PUBLISH_DATE, SortKey } from "types/types";
-import * as S from "../Header.styled";
-import { setSortedGames, setSortKey } from "redux/slises/gamesSlice";
-import { useAppDispatch, useAppSelector } from "hooks/redux-hooks";
+import { useState, useEffect } from 'react';
+import { useClickOutside } from 'hooks/useOutsideClick';
+import { PRICE, PUBLISH_DATE, SortKey } from 'types/types';
+import { setSortedGames, setSortKey } from 'redux/slises/gamesSlice';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
+import sprite from 'assets/icons.svg';
+import * as S from './SortKeys.styled';
+import { useLocation } from 'react-router-dom';
 
-
-export const PriceBtn = (): JSX.Element => {
-  const sortKey = useAppSelector(state => state.games.sortKey)
+const SortKeys = (): JSX.Element => {
+  const location = useLocation();
+  const sortKey = useAppSelector(state => state.games.sortKey);
   const dispatch = useAppDispatch();
   const [isPriceMenuOpen, setIsPriceMenuOpen] = useState(false);
 
@@ -18,17 +19,17 @@ export const PriceBtn = (): JSX.Element => {
   );
 
   function onClickPrice(): void {
-    setIsPriceMenuOpen((state) => !state);
-  };
+    setIsPriceMenuOpen(state => !state);
+  }
 
-  const onClickSetSort: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onClickSetSort: React.MouseEventHandler<HTMLButtonElement> = e => {
     const target = e.currentTarget as HTMLElement;
     dispatch(setSortKey(target.dataset.value as SortKey));
     onClickPrice();
   };
 
   useEffect(() => {
-    dispatch(setSortedGames());
+    dispatch(setSortedGames(location.pathname));
   }, [sortKey]);
 
   return (
@@ -41,7 +42,11 @@ export const PriceBtn = (): JSX.Element => {
       </S.PriceBtn>
       <S.PriceSubmenu isOpen={isPriceMenuOpen}>
         <li>
-          <S.PriceSubmenuBtn data-value={PRICE} onClick={onClickSetSort}>
+          <S.PriceSubmenuBtn
+            data-value={PRICE}
+            onClick={onClickSetSort}
+            isActive={sortKey === PRICE}
+          >
             <span>{PRICE}</span>
             <S.PriceIcon>
               <use href={`${sprite}#icon-pricetags`} />
@@ -49,7 +54,11 @@ export const PriceBtn = (): JSX.Element => {
           </S.PriceSubmenuBtn>
         </li>
         <li>
-          <S.PublishDateBtn data-value={PUBLISH_DATE} onClick={onClickSetSort}>
+          <S.PublishDateBtn
+            data-value={PUBLISH_DATE}
+            onClick={onClickSetSort}
+            isActive={sortKey === PUBLISH_DATE}
+          >
             <span>{PUBLISH_DATE}</span>
             <S.PriceIcon>
               <use href={`${sprite}#icon-browser`} />
@@ -60,3 +69,5 @@ export const PriceBtn = (): JSX.Element => {
     </S.PriceContainer>
   );
 };
+
+export { SortKeys };
