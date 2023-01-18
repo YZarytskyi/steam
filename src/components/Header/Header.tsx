@@ -3,9 +3,10 @@ import { Link, useSearchParams } from 'react-router-dom';
 import OptionsBtn from './OptionsBtn/OptionsBtn';
 import SortKeys from './SortKeys/SortKeys';
 import Nav from './Nav/Nav';
-import { HeaderSearch } from './HeaderSearch/HeaderSearch';
+import HeaderSearch from './HeaderSearch/HeaderSearch';
 import { useAppDispatch } from 'hooks/redux-hooks';
 import { clearGameList } from 'redux/games/gamesSlice';
+import { useWindowResize } from '../../hooks/useResize';
 import logo from 'assets/logo.png';
 import * as S from './Header.styled';
 
@@ -16,6 +17,8 @@ const Header = (): JSX.Element => {
     const searchQuery = searchParams.get('query');
     return searchQuery?.toLowerCase() || '';
   });
+
+  const windowSize = useWindowResize();
 
   useEffect(() => {
     if (query) {
@@ -32,7 +35,7 @@ const Header = (): JSX.Element => {
     setQuery(query);
   }, []);
 
-  if (window.innerWidth > 1170) {
+  if (windowSize > 1170) {
     return (
       <S.StyledHeader>
         <S.HeaderPCContainer>

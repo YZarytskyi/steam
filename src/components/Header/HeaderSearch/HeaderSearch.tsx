@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from 'hooks/redux-hooks';
 import {
@@ -7,6 +7,7 @@ import {
   setAbortSignal,
 } from 'redux/games/gamesSlice';
 import { fetchGamesByKeyword } from 'redux/games/gamesThunks';
+import { useWindowResize } from '../../../hooks/useResize';
 import useDebounce from 'hooks/useDebounce';
 import sprite from 'assets/icons.svg';
 import * as S from './HeaderSearch.styled';
@@ -22,7 +23,7 @@ const HeaderSearch = ({
 }: HeaderSearchProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-
+  const windowSize = useWindowResize();
   const debouncedValue = useDebounce<string>(query, 230);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const HeaderSearch = ({
   };
 
   const placeholder =
-  window.innerWidth > 1170 ? 'Enter an app name...' : 'Search';
+    windowSize > 1170 ? 'Enter an app name...' : 'Search';
 
   return (
     <S.SearchContainer>
@@ -60,4 +61,4 @@ const HeaderSearch = ({
   );
 };
 
-export { HeaderSearch };
+export default React.memo(HeaderSearch);

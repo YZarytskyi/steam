@@ -21,7 +21,7 @@ export const GameImage = styled.img`
   border-radius: 10px;
 `;
 
-export const GameTitle = styled.h2`
+export const GameTitle = styled.p`
   min-height: 47px;
   margin-left: 11px;
   margin-bottom: 6px;
