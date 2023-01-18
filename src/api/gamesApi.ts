@@ -4,7 +4,7 @@ import { Game, GameDetails } from "types/types";
 const gamesApi = axios.create({
   baseURL: "https://steam2.p.rapidapi.com",
   headers: {
-    "X-RapidAPI-Key": "0b7213985amsh871d3b18c85c7edp101408jsn7b98985eb070",
+    "X-RapidAPI-Key": "c9dfd30a01mshf1c33fa3f183eadp158136jsn6bc32c434085",
     "X-RapidAPI-Host": "steam2.p.rapidapi.com",
   },
 });

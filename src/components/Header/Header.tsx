@@ -19,7 +19,7 @@ const Header = (): JSX.Element => {
 
   useEffect(() => {
     if (query) {
-      searchParams.set('query', query);
+      searchParams.set('query', query.trim().toLowerCase());
       setSearchParams(searchParams);
       return;
     }

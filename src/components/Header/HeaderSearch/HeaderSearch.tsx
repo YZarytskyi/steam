@@ -26,7 +26,7 @@ const HeaderSearch = ({
   const debouncedValue = useDebounce<string>(query, 230);
 
   const onChangeInput: React.ChangeEventHandler<HTMLInputElement> = e => {
-    setNewQuery(e.target.value.trim().toLowerCase());
+    setNewQuery(e.target.value);
   };
 
   useEffect(() => {
