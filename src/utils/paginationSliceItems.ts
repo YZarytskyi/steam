@@ -6,5 +6,5 @@ export const paginationSliceItems = (currentPage: number, length: number) => {
     currentPage === Math.ceil(length / ITEMS_PER_PAGE)
       ? length
       : currentPage * ITEMS_PER_PAGE;
-  return [fromGameItem, toGameItem]
-}
+  return [fromGameItem, toGameItem];
+};

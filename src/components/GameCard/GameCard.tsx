@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import {
   addGameToFavorites,
   removeGameFromFavorites,
-} from 'redux/slises/gamesSlice';
+} from 'redux/games/gamesSlice';
 import sprite from 'assets/icons.svg';
 import * as S from './GameCard.styled';
 
@@ -12,7 +12,7 @@ interface GameCardProps {
   game: Game;
 }
 
-const GameCard = ({ game }: GameCardProps) => {
+const GameCard = ({ game }: GameCardProps): JSX.Element => {
   const favoriteGames = useAppSelector(state => state.games.favoriteGames);
   const dispatch = useAppDispatch();
 

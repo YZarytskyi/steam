@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks';
-import { fetchGameDetails, removeGameDetails } from 'redux/slises/gamesSlice';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
+import { fetchGameDetails } from 'redux/games/gamesThunks';
+import { removeGameDetails } from 'redux/games/gamesSlice';
 import { Spinner } from '../Spinner/Spinner';
 import * as S from './GameDetails.styled';
 
-const GameDetails = () => {
+const GameDetails = (): JSX.Element => {
   const { gameId } = useParams();
 
   const { gameDetails, isLoading } = useAppSelector(state => state.games);

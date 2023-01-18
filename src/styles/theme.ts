@@ -10,13 +10,4 @@ export const baseTheme = {
       secondary: '#231F20',
     }
   },
-
-  media: {
-    large: '(max-width: 1171px)',
-    small: '(max-width: 768px)',
-  },
-
-  durations: {
-    ms300: 300,
-  },
 }

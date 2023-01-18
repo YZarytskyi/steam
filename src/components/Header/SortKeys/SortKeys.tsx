@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useClickOutside } from 'hooks/useOutsideClick';
 import { PRICE, PUBLISH_DATE, SortKey } from 'types/types';
-import { setSortedGames, setSortKey } from 'redux/slises/gamesSlice';
+import { setSortKey } from 'redux/games/gamesSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import sprite from 'assets/icons.svg';
 import * as S from './SortKeys.styled';
-import { useLocation } from 'react-router-dom';
 
 const SortKeys = (): JSX.Element => {
-  const location = useLocation();
   const sortKey = useAppSelector(state => state.games.sortKey);
   const dispatch = useAppDispatch();
   const [isPriceMenuOpen, setIsPriceMenuOpen] = useState(false);
@@ -27,10 +25,6 @@ const SortKeys = (): JSX.Element => {
     dispatch(setSortKey(target.dataset.value as SortKey));
     onClickPrice();
   };
-
-  useEffect(() => {
-    dispatch(setSortedGames(location.pathname));
-  }, [sortKey]);
 
   return (
     <S.PriceContainer ref={priceMenuRef}>

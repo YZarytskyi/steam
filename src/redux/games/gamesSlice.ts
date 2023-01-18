@@ -1,8 +1,8 @@
 import { GameDetails, PRICE, SortKey } from 'types/types';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getGamesByKeyword, getGameDetails } from 'api/gamesApi';
+import { createSlice } from '@reduxjs/toolkit';
 import { Game } from 'types/types';
 import { gamesSort } from 'utils/gamesSort';
+import { fetchGameDetails, fetchGamesByKeyword } from './gamesThunks';
 import { Notify } from 'notiflix';
 
 const initialState: InitialState = {
@@ -28,30 +28,6 @@ interface InitialState {
   abortSignal: boolean;
   error: null | string;
 }
-
-export const fetchGamesByKeyword = createAsyncThunk<Game[], string>(
-  'games/fetch',
-  (keyword, { rejectWithValue }) => {
-    try {
-      return getGamesByKeyword(keyword);
-    } catch (err: any) {
-      console.log(err);
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const fetchGameDetails = createAsyncThunk<GameDetails, number>(
-  'gameDetail/fetch',
-  (id, { rejectWithValue }) => {
-    try {
-      return getGameDetails(id);
-    } catch (err: any) {
-      console.log(err);
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
 
 export const gamesSlice = createSlice({
   name: 'games',
@@ -84,9 +60,8 @@ export const gamesSlice = createSlice({
       state.sortFromLower = action.payload;
     },
     setSortedGames: (state, action) => {
-      const location: string = action.payload;
-      if (location.includes('favorites')) {
-        state.favoriteGames = gamesSort(
+      if (action.payload.includes('favorites')) {
+        state.filteredFavorites = gamesSort(
           state.favoriteGames,
           state.sortKey,
           state.sortFromLower
@@ -116,12 +91,18 @@ export const gamesSlice = createSlice({
           return;
         }
         if (!action.payload.length) {
-          Notify.failure('Games not found')
+          Notify.failure('Games not found', { showOnlyTheLastOne: true });
         }
-        state.games = action.payload;
+        const filteredGames = gamesSort(
+          action.payload,
+          state.sortKey,
+          state.sortFromLower
+        );
+        state.games = filteredGames;
       })
       .addCase(fetchGamesByKeyword.rejected, (state, action: any) => {
         state.error = action.payload;
+        state.games = [];
         state.isLoading = false;
       });
     builder

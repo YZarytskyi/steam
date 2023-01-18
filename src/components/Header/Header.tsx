@@ -1,22 +1,47 @@
-import { Link } from "react-router-dom";
-import { OptionsBtn } from "./OptionsBtn/OptionsBtn";
-import { SortKeys } from "./SortKeys/SortKeys";
-import { HeaderSearch } from "./HeaderSearch/HeaderSearch";
-import { Nav } from "./Nav/Nav";
-import logo from "assets/logo.png";
-import * as S from "./Header.styled";
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { OptionsBtn } from './OptionsBtn/OptionsBtn';
+import { SortKeys } from './SortKeys/SortKeys';
+import { HeaderSearch } from './HeaderSearch/HeaderSearch';
+import { useAppDispatch } from 'hooks/redux-hooks';
+import { Nav } from './Nav/Nav';
+import { clearGameList } from 'redux/games/gamesSlice';
+import logo from 'assets/logo.png';
+import * as S from './Header.styled';
 
-const Header = () => {
+const Header = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState<string>(() => {
+    const searchQuery = searchParams.get('query');
+    return searchQuery?.toLowerCase() || '';
+  });
+
+  useEffect(() => {
+    if (query) {
+      searchParams.set('query', query);
+      setSearchParams(searchParams);
+      return;
+    }
+    searchParams.delete('query');
+    setSearchParams(searchParams);
+    dispatch(clearGameList());
+  }, [query]);
+
+  const setNewQuery = (query: string) => {
+    setQuery(query);
+  };
+
   return (
     <S.StyledHeader>
       <S.HeaderPCContainer>
         <Link to="/">
           <S.Logo src={logo} alt="logo" />
         </Link>
-        <HeaderSearch />
+        <HeaderSearch query={query} setNewQuery={setNewQuery} />
         <OptionsBtn />
         <SortKeys />
-        <Nav />
+        <Nav setNewQuery={setNewQuery} />
       </S.HeaderPCContainer>
 
       <S.HeaderMobileContainer>
@@ -24,9 +49,9 @@ const Header = () => {
           <Link to="/">
             <S.Logo src={logo} alt="logo" />
           </Link>
-          <Nav />
+          <Nav setNewQuery={setNewQuery} />
         </S.LogoNavContainer>
-        <HeaderSearch />
+        <HeaderSearch query={query} setNewQuery={setNewQuery} />
         <S.PriceOptionsContainer>
           <SortKeys />
           <OptionsBtn />

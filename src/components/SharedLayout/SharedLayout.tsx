@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Header } from "components/Header/Header";
 import { Spinner } from "components/Spinner/Spinner";
 
-const SharedLayout = () => {
+const SharedLayout = (): JSX.Element => {
   return (
     <>
       <Header />

@@ -1,6 +1,6 @@
 import { Rings } from 'react-loader-spinner';
 
-export const Spinner = () => {
+export const Spinner = (): JSX.Element => {
   return (
     <div
       style={{
