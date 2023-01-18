@@ -1,11 +1,11 @@
 import { useClickOutside } from 'hooks/useOutsideClick';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import { setSortFromLower } from 'redux/games/gamesSlice';
 import sprite from 'assets/icons.svg';
 import * as S from './OptionsBtn.styled';
 
-export const OptionsBtn = (): JSX.Element => {
+const OptionsBtn = (): JSX.Element => {
   const sortFromLower = useAppSelector(state => state.games.sortFromLower);
   const dispatch = useAppDispatch();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -59,3 +59,5 @@ export const OptionsBtn = (): JSX.Element => {
     </S.OptionsContainer>
   );
 };
+
+export default React.memo(OptionsBtn)

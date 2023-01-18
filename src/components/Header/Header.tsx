@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { OptionsBtn } from './OptionsBtn/OptionsBtn';
-import { SortKeys } from './SortKeys/SortKeys';
+import OptionsBtn from './OptionsBtn/OptionsBtn';
+import SortKeys from './SortKeys/SortKeys';
+import Nav from './Nav/Nav';
 import { HeaderSearch } from './HeaderSearch/HeaderSearch';
 import { useAppDispatch } from 'hooks/redux-hooks';
-import { Nav } from './Nav/Nav';
 import { clearGameList } from 'redux/games/gamesSlice';
 import logo from 'assets/logo.png';
 import * as S from './Header.styled';
@@ -28,22 +28,28 @@ const Header = (): JSX.Element => {
     dispatch(clearGameList());
   }, [query]);
 
-  const setNewQuery = (query: string) => {
+  const setNewQuery = useCallback((query: string) => {
     setQuery(query);
-  };
+  }, []);
+
+  if (window.innerWidth > 1170) {
+    return (
+      <S.StyledHeader>
+        <S.HeaderPCContainer>
+          <Link to="/">
+            <S.Logo src={logo} alt="logo" />
+          </Link>
+          <HeaderSearch query={query} setNewQuery={setNewQuery} />
+          <OptionsBtn />
+          <SortKeys />
+          <Nav setNewQuery={setNewQuery} />
+        </S.HeaderPCContainer>
+      </S.StyledHeader>
+    );
+  }
 
   return (
     <S.StyledHeader>
-      <S.HeaderPCContainer>
-        <Link to="/">
-          <S.Logo src={logo} alt="logo" />
-        </Link>
-        <HeaderSearch query={query} setNewQuery={setNewQuery} />
-        <OptionsBtn />
-        <SortKeys />
-        <Nav setNewQuery={setNewQuery} />
-      </S.HeaderPCContainer>
-
       <S.HeaderMobileContainer>
         <S.LogoNavContainer>
           <Link to="/">

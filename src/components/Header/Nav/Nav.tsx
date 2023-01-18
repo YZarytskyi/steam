@@ -1,3 +1,4 @@
+import React from 'react';
 import * as S from './Nav.styled';
 
 interface NavProps {
@@ -27,4 +28,4 @@ const Nav = ({ setNewQuery }: NavProps): JSX.Element => {
   );
 };
 
-export { Nav };
+export default React.memo(Nav);

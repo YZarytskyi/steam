@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useClickOutside } from 'hooks/useOutsideClick';
 import { PRICE, PUBLISH_DATE, SortKey } from 'types/types';
 import { setSortKey } from 'redux/games/gamesSlice';
@@ -64,4 +64,4 @@ const SortKeys = (): JSX.Element => {
   );
 };
 
-export { SortKeys };
+export default React.memo(SortKeys);

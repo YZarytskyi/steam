@@ -25,10 +25,6 @@ const HeaderSearch = ({
 
   const debouncedValue = useDebounce<string>(query, 230);
 
-  const onChangeInput: React.ChangeEventHandler<HTMLInputElement> = e => {
-    setNewQuery(e.target.value);
-  };
-
   useEffect(() => {
     if (location.pathname.includes('favorites')) {
       dispatch(filterFavorites(debouncedValue));
@@ -42,8 +38,12 @@ const HeaderSearch = ({
     dispatch(setAbortSignal());
   }, [debouncedValue]);
 
+  const onChangeInput: React.ChangeEventHandler<HTMLInputElement> = e => {
+    setNewQuery(e.target.value);
+  };
+
   const placeholder =
-    window.innerWidth > 1170 ? 'Enter an app name...' : 'Search';
+  window.innerWidth > 1170 ? 'Enter an app name...' : 'Search';
 
   return (
     <S.SearchContainer>
