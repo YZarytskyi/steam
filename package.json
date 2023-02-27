@@ -1,7 +1,7 @@
 {
-  "name": "iteam-react-test",
+  "name": "steam",
   "version": "0.1.0",
-  "homepage": "https://yzarytskyi.github.io/iteam-react-test",
+  "homepage": "https://yzarytskyi.github.io/steam",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
